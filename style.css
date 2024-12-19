@@ -1,0 +1,236 @@
+/* Estilos Gerais */
+body {
+    background-color: var(--bg-color, #f8f9fa);
+    color: var(--text-color, #343a40);
+    transition: background-color 0.5s, color 0.5s;
+}
+
+h1, h4 {
+    color: var(--text-color, #343a40);
+    transition: color 0.5s;
+}
+
+:root {
+    --bg-color: #f8f9fa;
+    --text-color: #343a40;
+    --card-bg: #ffffff;
+    --card-border: #343a40;
+    --cell-bg: #ffffff;
+    --cell-hover-bg: #e9ecef;
+    --x-color: #dc3545;
+    --o-color: #0d6efd;
+    --winning-bg: #d4edda;
+    --draw-bg: #fff3cd;
+}
+
+body.dark-theme {
+    --bg-color: #343a40;
+    --text-color: #f8f9fa;
+    --card-bg: #495057;
+    --card-border: #f8f9fa;
+    --cell-bg: #6c757d;
+    --cell-hover-bg: #495057;
+    --winning-bg: #198754;
+    --draw-bg: #ffc107;
+}
+
+body.pastel-theme {
+    --bg-color: #ffefd5;
+    --text-color: #6a5acd;
+    --card-bg: #fff0f5;
+    --card-border: #6a5acd;
+    --cell-bg: #fff0f5;
+    --cell-hover-bg: #ffe4e1;
+    --winning-bg: #98fb98;
+    --draw-bg: #fafad2;
+}
+
+/* Versão Legado */
+body.legacy-theme {
+    --bg-color: #fdf6e3;
+    --text-color: #657b83;
+    --card-bg: #eee8d5;
+    --card-border: #657b83;
+    --cell-bg: #eee8d5;
+    --cell-hover-bg: #d3c6aa;
+    --winning-bg: #b58900;
+    --draw-bg: #cb4b16;
+    font-family: 'Courier New', Courier, monospace;
+    background-image: url('https://www.transparenttextures.com/patterns/paper-fibers.png');
+    background-size: cover;
+}
+
+/* Aplicação de Variáveis nos Containers */
+.theme-container {
+    background-color: var(--card-bg);
+    border: 1px solid var(--card-border);
+    color: var(--text-color);
+    transition: background-color 0.5s, border-color 0.5s, color 0.5s;
+}
+
+/* Tabuleiro do Jogo */
+#game {
+    max-width: 320px;
+    margin: 0 auto;
+}
+
+.cell {
+    background-color: var(--cell-bg);
+    border: 2px solid var(--card-border);
+    height: 100px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 3rem;
+    cursor: pointer;
+    position: relative;
+    transition: background-color 0.3s, transform 0.2s, box-shadow 0.3s;
+    border-radius: 8px;
+    color: var(--text-color);
+}
+
+.cell:hover {
+    background-color: var(--cell-hover-bg);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.cell.x {
+    color: var(--x-color);
+}
+
+.cell.o {
+    color: var(--o-color);
+}
+
+/* Animação para Marcação */
+.cell.animate::after {
+    content: attr(data-player);
+    position: absolute;
+    font-size: 3rem;
+    opacity: 0;
+    transform: scale(0.5);
+    transition: opacity 0.3s, transform 0.3s;
+}
+
+.cell.x.animate::after {
+    content: 'X';
+    color: var(--x-color);
+}
+
+.cell.o.animate::after {
+    content: 'O';
+    color: var(--o-color);
+}
+
+.cell.animate::after {
+    opacity: 1;
+    transform: scale(1);
+}
+
+/* Destaque para Vitória */
+.winning-cell {
+    background-color: var(--winning-bg) !important;
+    animation: highlight 0.5s ease-in-out;
+}
+
+/* Destaque para Empate */
+.draw {
+    background-color: var(--draw-bg) !important;
+    animation: highlightDraw 0.5s ease-in-out;
+}
+
+@keyframes highlight {
+    from { background-color: var(--cell-bg); }
+    to { background-color: var(--winning-bg); }
+}
+
+@keyframes highlightDraw {
+    from { background-color: var(--cell-bg); }
+    to { background-color: var(--draw-bg); }
+}
+
+/* Histórico de Jogadas */
+#moveHistory {
+    max-height: 400px;
+    overflow-y: auto;
+}
+
+#moveHistory li {
+    font-size: 0.9rem;
+}
+
+/* Responsividade */
+@media (max-width: 992px) {
+    #game {
+        max-width: 280px;
+    }
+    .cell {
+        height: 80px;
+        font-size: 2.5rem;
+    }
+}
+
+@media (max-width: 576px) {
+    .cell {
+        height: 70px;
+        font-size: 2rem;
+    }
+}
+
+/* Botões de Tema no Modal */
+#themeModal .theme-button {
+    width: 120px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#themeModal .theme-button i {
+    margin-right: 5px;
+}
+
+/* Botões de Tema Ativo */
+.theme-button.active {
+    background-color: #0d6efd;
+    color: #fff;
+}
+
+/* Botões de Ação */
+#restartButton, #undoButton {
+    transition: background-color 0.3s, transform 0.2s;
+}
+
+#restartButton:hover, #undoButton:hover {
+    transform: scale(1.05);
+}
+
+/* Estilos para Versão Legado */
+body.legacy-theme .cell {
+    border: 1px solid #657b83;
+    background-color: #eee8d5;
+}
+
+body.legacy-theme .btn {
+    font-family: 'Courier New', Courier, monospace;
+}
+
+body.legacy-theme .card {
+    background-color: var(--card-bg);
+    border: 1px solid var(--card-border);
+}
+
+body.legacy-theme h1, body.legacy-theme h4 {
+    color: var(--text-color);
+}
+
+#scoreX, #scoreO {
+    font-size: 1.2rem;
+}
+
+#scoreX strong, #scoreO strong {
+    font-size: 1.2rem;
+}
+
+.btn-outline-secondary i {
+    font-size: 1.2rem;
+}

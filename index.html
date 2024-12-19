@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jogo da Velha</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome para ícones -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Estilos Personalizados -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container py-5">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h1 class="text-center">Jogo da Velha</h1>
+            <div>
+                <!-- Botão de Seleção de Tema (Ícone de Sol) -->
+                <button type="button" class="btn btn-outline-secondary me-2" data-bs-toggle="modal" data-bs-target="#themeModal" title="Selecionar Tema">
+                    <i class="fas fa-sun"></i>
+                </button>
+                <!-- Botão de Alternância de Versão (Ícone de Mapa) -->
+                <button id="toggleVersion" class="btn btn-outline-secondary" title="Alternar Versão">
+                    <i class="fas fa-map"></i>
+                </button>
+            </div>
+        </div>
+        
+        <!-- Informações do Jogo e Controles -->
+        <div class="row mb-4">
+            <!-- Painel Principal do Jogo -->
+            <div class="col-lg-8">
+                <div class="card shadow-sm theme-container">
+                    <div class="card-body">
+                        <div class="row mb-3">
+                            <div class="col text-center">
+                                <h4>Vez de:</h4>
+                                <div id="playerTurn" class="fs-3">
+                                    X
+                                </div>
+                            </div>
+                            <div class="col text-center">
+                                <h4>Pontuação</h4>
+                                <div class="d-flex justify-content-center">
+                                    <div class="me-3">
+                                        <p id="scoreX"><strong>X</strong>: 0</p>
+                                    </div>
+                                    <div>
+                                        <p id="scoreO"><strong>O</strong>: 0</p>
+                                    </div>
+                                </div>
+                                <button id="resetScore" class="btn btn-danger btn-sm">Resetar Pontuação</button>
+                            </div>
+                            <div class="col text-center">
+                                <h4>Modo de Jogo</h4>
+                                <div class="btn-group" role="group" aria-label="Modo de Jogo">
+                                    <input type="radio" class="btn-check" name="mode" id="twoPlayer" value="twoPlayer" checked>
+                                    <label class="btn btn-outline-primary" for="twoPlayer" title="Dois Jogadores"><i class="fas fa-user-friends"></i></label>
+                                    
+                                    <input type="radio" class="btn-check" name="mode" id="aiMode" value="ai">
+                                    <label class="btn btn-outline-primary" for="aiMode" title="Contra o Computador"><i class="fas fa-robot"></i></label>
+                                </div>
+                                <div id="aiSettings" class="mt-2" style="display: none;">
+                                    <select id="aiDifficulty" class="form-select">
+                                        <option value="" selected disabled>Escolha a Dificuldade</option>
+                                        <option value="easy">Fácil</option>
+                                        <option value="medium">Médio</option>
+                                        <option value="hard">Difícil</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Modal para Inserção de Nomes dos Jogadores -->
+                        <div class="row mb-3" id="playerNamesSection" style="display: none;">
+                            <div class="col text-center">
+                                <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#playerNamesModal">
+                                    <i class="fas fa-user-edit"></i> Definir Nomes
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Tabuleiro do Jogo -->
+                        <div id="game" class="row g-2 justify-content-center">
+                            <div class="col-4">
+                                <div class="cell" data-cell></div>
+                            </div>
+                            <div class="col-4">
+                                <div class="cell" data-cell></div>
+                            </div>
+                            <div class="col-4">
+                                <div class="cell" data-cell></div>
+                            </div>
+                            <div class="col-4">
+                                <div class="cell" data-cell></div>
+                            </div>
+                            <div class="col-4">
+                                <div class="cell" data-cell></div>
+                            </div>
+                            <div class="col-4">
+                                <div class="cell" data-cell></div>
+                            </div>
+                            <div class="col-4">
+                                <div class="cell" data-cell></div>
+                            </div>
+                            <div class="col-4">
+                                <div class="cell" data-cell></div>
+                            </div>
+                            <div class="col-4">
+                                <div class="cell" data-cell></div>
+                            </div>
+                        </div>
+
+                        <!-- Botões de Ação -->
+                        <div class="text-center mt-4">
+                            <button id="restartButton" class="btn btn-primary me-2">Reiniciar Jogo</button>
+                            <button id="undoButton" class="btn btn-warning">Desfazer Última Jogada</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Histórico de Jogadas -->
+            <div class="col-lg-4 mt-4 mt-lg-0">
+                <div class="card shadow-sm theme-container h-100">
+                    <div class="card-body">
+                        <h4>Histórico de Jogadas</h4>
+                        <ul id="moveHistory" class="list-group">
+                            <!-- Itens do histórico serão adicionados aqui -->
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal para Seleção de Tema -->
+    <div class="modal fade" id="themeModal" tabindex="-1" aria-labelledby="themeModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content theme-container">
+          <div class="modal-header">
+            <h5 class="modal-title" id="themeModalLabel">Selecionar Tema</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+          </div>
+          <div class="modal-body text-center">
+            <button type="button" class="btn btn-outline-secondary m-2 theme-button" data-theme="default">
+                <i class="fas fa-sun"></i> Padrão
+            </button>
+            <button type="button" class="btn btn-outline-secondary m-2 theme-button" data-theme="dark">
+                <i class="fas fa-moon"></i> Escuro
+            </button>
+            <button type="button" class="btn btn-outline-secondary m-2 theme-button" data-theme="pastel">
+                <i class="fas fa-palette"></i> Pastel
+            </button>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal para Inserção de Nomes dos Jogadores -->
+    <div class="modal fade" id="playerNamesModal" tabindex="-1" aria-labelledby="playerNamesModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content theme-container">
+          <div class="modal-header">
+            <h5 class="modal-title" id="playerNamesModalLabel">Definir Nomes dos Jogadores</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+          </div>
+          <div class="modal-body">
+            <form id="playerNamesForm">
+                <div class="mb-3">
+                    <label for="playerXName" class="form-label">Nome do Jogador X:</label>
+                    <input type="text" class="form-control" id="playerXName" placeholder="Digite o nome do Jogador X" required>
+                </div>
+                <div class="mb-3">
+                    <label for="playerOName" class="form-label">Nome do Jogador O:</label>
+                    <input type="text" class="form-control" id="playerOName" placeholder="Digite o nome do Jogador O" required>
+                </div>
+                <button type="submit" class="btn btn-primary">Salvar Nomes</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bootstrap JS e Dependências -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Script Personalizado -->
+    <script src="script.js"></script>
+</body>
+</html>
